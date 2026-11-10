@@ -12,7 +12,7 @@
 | excluded because they are for authorized MDRRMO staff/system use.
 |--------------------------------------------------------------------------
 */
-$bookingEndpoint = 'https://offices.estancia.website/mdrrmo/bookings';
+$bookingEndpoint = 'https://offices.estancia.website/mdrrmo/bookings/public';
 $officeName = 'Municipal Disaster Risk Reduction and Management Office';
 $municipality = 'Estancia, Iloilo';
 ?>
