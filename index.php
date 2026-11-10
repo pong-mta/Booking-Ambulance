@@ -26,7 +26,7 @@
 
 */
 
-$bookingEndpoint = 'https://offices.estancia.website/mdrrmo/bookings/public';
+$bookingEndpoint = 'https://offices.estancia.website/bookings/public';
 
 $officeName = 'Municipal Disaster Risk Reduction and Management Office';
 
