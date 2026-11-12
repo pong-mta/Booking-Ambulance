@@ -171,7 +171,7 @@ footer{padding:23px 0;background:#172238;color:#cbd3df}
  <div class="wrap hero-inner">
   <div>
    <span class="eyebrow"><i class="eyebrow-dot"></i> Ambulance transportation request</span>
-   <h1>Help is a request away.</h1>
+   <h1>Every Life Matters. Every Second Counts.</h1>
    <p class="hero-copy">Submit a scheduled ambulance transportation request to the Municipal Disaster Risk Reduction and Management Office of Estancia, Iloilo. Our team will review your information and contact you regarding your request.</p>
    <div class="hero-actions"><a class="btn btn-light" href="#booking">Start booking <span>→</span></a><a class="btn btn-outline" href="#how">How it works</a></div>
    <p class="hero-note">All requests are subject to MDRRMO assessment and confirmation.</p>
