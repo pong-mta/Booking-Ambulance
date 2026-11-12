@@ -92,6 +92,12 @@ h1{max-width:650px;margin:19px 0 14px;font-size:clamp(38px,5vw,58px);line-height
 .section-heading strong{font-size:12px}
 .section-heading small{display:block;margin-top:3px;color:var(--muted);font-size:10px}
 .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.schedule-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.schedule-field{min-width:0}
+.schedule-field input[type="date"],.schedule-field input[type="time"]{width:100%;min-width:0;max-width:100%;min-height:54px;padding:12px 13px;border:1px solid #d5dce5;border-radius:12px;background:#fff;color:var(--ink);font-size:16px;font-weight:650;line-height:1.3;color-scheme:light}
+.schedule-field input[type="date"]:focus,.schedule-field input[type="time"]:focus{border-color:#bd4650;box-shadow:0 0 0 3px #a51d2a12;outline:none}
+.schedule-field input[type="date"]::-webkit-date-and-time-value,.schedule-field input[type="time"]::-webkit-date-and-time-value{text-align:left}
+.schedule-field .hint{font-size:10px}
 .field.full{grid-column:1/-1}
 .field label{display:block;margin-bottom:7px;color:#344256;font-size:10px;font-weight:800}
 .field input,.field select,.field textarea{display:block;width:100%;min-height:43px;padding:11px 12px;border:1px solid #dce2e9;border-radius:10px;background:#fff;color:var(--ink);font-size:11px;outline:none;transition:border .15s,box-shadow .15s}
@@ -145,7 +151,7 @@ footer{padding:23px 0;background:#172238;color:#cbd3df}
 @media(max-width:650px){
  .wrap{width:min(100% - 28px,1160px)}.topbar{height:65px}.brand-mark{width:40px;height:40px}.brand-name{font-size:11px}.brand-sub{font-size:9px}.top-meta>span{display:none}.top-meta{gap:0}.top-link{font-size:9px}
  .hero-inner{display:block;min-height:0;padding-top:42px;padding-bottom:38px}.hero-visual{display:none}h1{font-size:42px}.hero-copy{font-size:12px}.trust-inner{grid-template-columns:1fr;gap:11px}.trust-item{justify-content:flex-start;width:260px;margin:auto}
- .main{padding:38px 0 48px}.form-header,.form-body{padding:17px}.form-footer{align-items:stretch;flex-direction:column;padding:15px 17px}.submit{width:100%}.fields,.position-options{grid-template-columns:1fr}.field.full{grid-column:auto}.side-grid{grid-template-columns:1fr}.side-card:last-child{grid-column:auto}.footer-inner{align-items:flex-start;flex-direction:column}.required-note{display:none}
+ .main{padding:38px 0 48px}.form-header,.form-body{padding:17px}.field input,.field select,.field textarea{font-size:16px;min-height:48px}.field textarea{min-height:90px}.schedule-field input[type="date"],.schedule-field input[type="time"]{min-height:56px;font-size:16px;padding:13px 12px}.form-footer{align-items:stretch;flex-direction:column;padding:15px 17px}.submit{width:100%}.fields,.position-options,.schedule-fields{grid-template-columns:1fr}.field.full{grid-column:auto}.side-grid{grid-template-columns:1fr}.side-card:last-child{grid-column:auto}.footer-inner{align-items:flex-start;flex-direction:column}.required-note{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
@@ -222,9 +228,9 @@ footer{padding:23px 0;background:#172238;color:#cbd3df}
      </section>
      <section class="section">
       <div class="section-heading"><span class="section-number">04</span><span><strong>Requested schedule</strong><small>Choose your preferred transportation date and time.</small></span></div>
-      <div class="fields">
-       <div class="field"><label for="requested_date">Requested date <b class="required">*</b></label><input id="requested_date" name="requested_date" type="date" required></div>
-       <div class="field"><label for="requested_time">Requested time <b class="required">*</b></label><input id="requested_time" name="requested_time" type="time" required></div>
+      <div class="schedule-fields">
+       <div class="field schedule-field"><label for="requested_date">Requested date <b class="required">*</b></label><input id="requested_date" name="requested_date" type="date" required><small class="hint">Tap to open the calendar and select a date.</small></div>
+       <div class="field schedule-field"><label for="requested_time">Requested time <b class="required">*</b></label><input id="requested_time" name="requested_time" type="time" required><small class="hint">Tap to choose your preferred time.</small></div>
       </div>
      </section>
     </div>
