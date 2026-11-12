@@ -98,6 +98,7 @@ h1{max-width:650px;margin:19px 0 14px;font-size:clamp(38px,5vw,58px);line-height
 .field textarea{min-height:78px;resize:vertical}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:#bd4650;box-shadow:0 0 0 3px #a51d2a12}
 .field input::placeholder,.field textarea::placeholder{color:#a2acb8}
+.field input.capitalized,.field textarea.capitalized{text-transform:capitalize}
 .hint{display:block;margin-top:5px;color:#8994a1;font-size:9px;line-height:1.5}
 .position-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .position-option{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid #dce2e9;border-radius:11px;cursor:pointer;transition:.15s}
@@ -193,8 +194,8 @@ footer{padding:23px 0;background:#172238;color:#cbd3df}
      <section class="section">
       <div class="section-heading"><span class="section-number">01</span><span><strong>Requester information</strong><small>How can our team contact you?</small></span></div>
       <div class="fields">
-       <div class="field"><label for="requester_name">Full name <b class="required">*</b></label><input id="requester_name" name="requester_name" required maxlength="150" autocomplete="name" placeholder="Enter your full name"></div>
-       <div class="field"><label for="requester_phone">Contact number <b class="required">*</b></label><input id="requester_phone" name="requester_phone" type="tel" inputmode="tel" required maxlength="16" autocomplete="tel" placeholder="09XXXXXXXXX or +639XXXXXXXXX"><small class="hint">Use a mobile number MDRRMO can reach.</small></div>
+       <div class="field"><label for="requester_name">Full name <b class="required">*</b></label><input id="requester_name" name="requester_name" class="capitalized" required maxlength="150" autocomplete="name" placeholder="Enter your full name"></div>
+       <div class="field"><label for="requester_phone">Contact number <b class="required">*</b></label><input id="requester_phone" name="requester_phone" type="tel" inputmode="numeric" pattern="09[0-9]{9}" required maxlength="11" autocomplete="tel" placeholder="09XXXXXXXXX"><small class="hint">Enter 11 digits only, starting with 09.</small></div>
        <div class="field"><label for="requester_email">Email address <span style="font-weight:500;color:#8994a1">(optional)</span></label><input id="requester_email" name="requester_email" type="email" maxlength="150" autocomplete="email" placeholder="name@example.com"></div>
        <div class="field"><label for="passenger_count">Passenger count <b class="required">*</b></label><input id="passenger_count" name="passenger_count" type="number" min="1" max="100" value="1" required><small class="hint">Include the patient and accompanying persons.</small></div>
        <div class="field full"><label>Patient position <b class="required">*</b></label><div class="position-options">
@@ -213,10 +214,10 @@ footer{padding:23px 0;background:#172238;color:#cbd3df}
      <section class="section">
       <div class="section-heading"><span class="section-number">03</span><span><strong>Pickup and destination</strong><small>Add landmarks or facility names to help locate each place.</small></span></div>
       <div class="fields">
-       <div class="field full"><label for="pickup_address">Pickup address / location <b class="required">*</b></label><textarea id="pickup_address" name="pickup_address" required maxlength="2000" placeholder="House number, street, sitio/purok, landmark, or exact pickup location"></textarea></div>
-       <div class="field"><label for="pickup_barangay">Pickup barangay</label><input id="pickup_barangay" name="pickup_barangay" maxlength="100" placeholder="Enter pickup barangay"></div>
-       <div class="field full"><label for="destination_address">Destination address / facility <b class="required">*</b></label><textarea id="destination_address" name="destination_address" required maxlength="2000" placeholder="Hospital, clinic, facility name and complete address"></textarea></div>
-       <div class="field"><label for="destination_barangay">Destination barangay</label><input id="destination_barangay" name="destination_barangay" maxlength="100" placeholder="Enter destination barangay"></div>
+       <div class="field full"><label for="pickup_address">Pickup address / location <b class="required">*</b></label><textarea id="pickup_address" name="pickup_address" class="capitalized" required maxlength="2000" placeholder="House number, street, sitio/purok, landmark, or exact pickup location"></textarea></div>
+       <div class="field"><label for="pickup_barangay">Pickup barangay</label><input id="pickup_barangay" name="pickup_barangay" class="capitalized" maxlength="100" placeholder="Enter pickup barangay"></div>
+       <div class="field full"><label for="destination_address">Destination address / facility <b class="required">*</b></label><textarea id="destination_address" name="destination_address" class="capitalized" required maxlength="2000" placeholder="Hospital, clinic, facility name and complete address"></textarea></div>
+       <div class="field"><label for="destination_barangay">Destination barangay</label><input id="destination_barangay" name="destination_barangay" class="capitalized" maxlength="100" placeholder="Enter destination barangay"></div>
       </div>
      </section>
      <section class="section">
@@ -286,19 +287,31 @@ function flattenErrors(errors){
   return `${label}: ${Array.isArray(messages)?messages.join(', '):String(messages)}`;
  }).join(' ');
 }
-function normalizePhilippineMobile(value){
- let phone=String(value||'').trim().replace(/[\s()-]/g,'');
- if(phone.startsWith('+63'))phone='0'+phone.slice(3);
- else if(phone.startsWith('63'))phone='0'+phone.slice(2);
- return phone;
+function digitsOnly(value){
+ return String(value||'').replace(/\D/g,'').slice(0,11);
+}
+
+// Capitalize the first letter of each word without changing the remaining
+// letters, so abbreviations and mixed-case place names are preserved.
+function capitalizeInitials(value){
+ return String(value||'').replace(/(^|[\s\-’'])\p{L}/gu, letter=>letter.toUpperCase());
 }
 function isValidEmail(value){
  if(!value)return true;
  if(value.length>150)return false;
  return /^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$/i.test(value);
 }
-phoneInput.addEventListener('input',()=>phoneInput.setCustomValidity(''));
+phoneInput.addEventListener('input',()=>{
+ const cleaned=digitsOnly(phoneInput.value);
+ if(phoneInput.value!==cleaned)phoneInput.value=cleaned;
+ phoneInput.setCustomValidity('');
+});
 emailInput.addEventListener('input',()=>emailInput.setCustomValidity(''));
+
+['requester_name','pickup_address','pickup_barangay','destination_address','destination_barangay'].forEach(id=>{
+ const field=document.getElementById(id);
+ field.addEventListener('blur',()=>{field.value=capitalizeInitials(field.value.trim());});
+});
 
 form.addEventListener('submit',async(event)=>{
  event.preventDefault();clearError();
@@ -306,17 +319,17 @@ form.addEventListener('submit',async(event)=>{
  const today=getLocalDate();
  if(dateInput.value<today){showError('Please select today or a future date.');dateInput.focus();return;}
  const data=Object.fromEntries(new FormData(form).entries());
- data.requester_name=String(data.requester_name||'').trim();
- data.requester_phone=normalizePhilippineMobile(data.requester_phone);
+ data.requester_name=capitalizeInitials(String(data.requester_name||'').trim());
+ data.requester_phone=digitsOnly(data.requester_phone);
  data.requester_email=String(data.requester_email||'').trim();
  data.purpose_details=String(data.purpose_details||'').trim();
- data.pickup_address=String(data.pickup_address||'').trim();
- data.pickup_barangay=String(data.pickup_barangay||'').trim();
- data.destination_address=String(data.destination_address||'').trim();
- data.destination_barangay=String(data.destination_barangay||'').trim();
+ data.pickup_address=capitalizeInitials(String(data.pickup_address||'').trim());
+ data.pickup_barangay=capitalizeInitials(String(data.pickup_barangay||'').trim());
+ data.destination_address=capitalizeInitials(String(data.destination_address||'').trim());
+ data.destination_barangay=capitalizeInitials(String(data.destination_barangay||'').trim());
  data.passenger_count=Number(data.passenger_count);
 
- if(!/^09\d{9}$/.test(data.requester_phone)){showError('Enter a valid Philippine mobile number: 09XXXXXXXXX or +639XXXXXXXXX.');phoneInput.focus();return;}
+ if(!/^09\d{9}$/.test(data.requester_phone)){showError('Enter a valid 11-digit Philippine mobile number starting with 09. Numbers only; do not include spaces or symbols.');phoneInput.focus();return;}
  if(!isValidEmail(data.requester_email)){showError('Please enter a valid email address, or leave the email field blank.');emailInput.focus();return;}
  if(!Number.isInteger(data.passenger_count)||data.passenger_count<1||data.passenger_count>100){showError('Passenger count must be a whole number from 1 to 100.');document.getElementById('passenger_count').focus();return;}
  const requiredFields=['requester_name','requester_phone','purpose','pickup_address','destination_address','requested_date','requested_time'];
